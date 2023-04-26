@@ -42,7 +42,6 @@ bool notComplete(queues q[]){
 
 
 void sort_ps(queues q){
-    //Queue q has to be sorted according to priority of processes
     for(int i=1;i<q.length;i++){
         for(int j=0;j<q.length-1;j++){
             if(q.p[j].priority<q.p[j+1].priority){
@@ -87,9 +86,9 @@ main(){
     process p1[no_of_processes];
 
     for(int i=0;i<no_of_processes;i++){
-        cout<<"Enter the priority of the process\n";
+        cout<<"Enter the Priority:\n";
         cin>>priority_of_process;
-        cout<<"Enter the burst time of the process\n";
+        cout<<"Enter the Burst Time: \n";
         cin>>burst_time_of_process;
         p1[i].priority = priority_of_process;
         p1[i].burst_time = burst_time_of_process;
@@ -129,16 +128,20 @@ main(){
     }
 
     a--;b--;c--;
+    cout<<"\n";
+    cout<<"\n";
+    cout<<"SOLUTION: ";
+    cout<<"\n";
+    cout<<"\n";
     for(int i=0;i<3;i++){
         cout<<"Queue "<<i+1<<" : \t";
         for(int j=0;j<q[i].length;j++){
-            cout<<q[i].p[j].priority<<"->";
+            cout<<q[i].p[j].priority<<"--->";
         }
         cout<<"NULL\n";
     }
 
 
-    //While RR on multiple queues is not complete, keep on repeating
     int timer = 0;
     int l =-1;
     int rr_timer = 3;
@@ -154,10 +157,7 @@ main(){
             l=l%3;
         }
 
-        //Process lth queue if its already not executed
-        //If its executed change the value of l
         if(q[l].executed == true){
-                cout<<"Queue "<<l+1<<" completed\n";
             l+=1;
             if(l>=3){
                 l=l%3;
@@ -165,12 +165,11 @@ main(){
             continue;
         }
 
-        //Finally you now have a queue which is not completely executed
-        //Process the incomplete processes over it
 
         if(l==0){
-            cout<<"Queue "<<l+1<<" in hand\n";
+            
             //Round Robin Algorithm for q=3
+            
             if(rr_timer == 0){
                 rr_timer = 3;
             }
@@ -184,7 +183,6 @@ main(){
                     break;
                 }
                 while(rr_timer>0 && q[l].p[i].burst_time!=0 && timer!=10){
-                    cout<<"Executing queue 1 and "<<i+1<<" process for a unit time. Process has priority of "<<q[l].p[i].priority<<"\n";
                     q[l].p[i].burst_time--;
                     checkCompleteTimer(q);
                     rr_timer--;
@@ -208,7 +206,7 @@ main(){
                     continue;
                 }
                 if(rr_timer <= 0){
-                    rr_timer = 4;
+                    rr_timer = 3;
                     if(i == (q[i].length-1)){
                         i=-1;
                     }
@@ -220,9 +218,10 @@ main(){
 
 
         else if(l==1){
-            cout<<"Queue "<<l+1<<" in hand\n";
             sort_ps(q[l]);
+            
             //Priority Scheduling
+            
             for(int i=0;i<q[l].length;i++){
                 if(q[l].p[i].burst_time==0){
                     counterps++;
@@ -232,7 +231,6 @@ main(){
                     break;
                 }
                 while(q[l].p[i].burst_time!=0 && timer!=10){
-                    cout<<"Executing queue 2 and "<<i+1<<" process for a unit time. Process has priority of "<<q[l].p[i].priority<<"\n";
                     q[l].p[i].burst_time--;
                     checkCompleteTimer(q);
                     timer++;
@@ -248,8 +246,8 @@ main(){
             }
         }
         else {
-                cout<<"Queue "<<l+1<<" in hand\n";
                 //SJF
+            
                 int shortest_job_index = -1;
                 for (int i = 0; i < q[l].length; i++) {
                     if (q[l].p[i].burst_time == 0) {
@@ -265,7 +263,6 @@ main(){
                 }
             
                 while (q[l].p[shortest_job_index].burst_time != 0 && timer != 10) {
-                    cout<<"Executing queue "<<l+1<<" and process "<<shortest_job_index+1<<" with burst time "<<q[l].p[shortest_job_index].burst_time<<"\n";
                     q[l].p[shortest_job_index].burst_time--;
                     checkCompleteTimer(q);
                     timer++;
@@ -290,8 +287,7 @@ main(){
             
                     // Check if there is a shorter job in the queue
                     if (next_shortest_job_index != -1 && q[l].p[next_shortest_job_index].burst_time < q[l].p[shortest_job_index].burst_time - 1) {
-                        // Preempt the current job and switch to the next shortest job
-                        cout<<"Preempting process "<<shortest_job_index+1<<" with burst time "<<q[l].p[shortest_job_index].burst_time<<" in queue "<<l+1<<"\n";
+                        
                         q[l].p[shortest_job_index].isPreempted = true;
                         shortest_job_index = next_shortest_job_index;
                     }
@@ -299,20 +295,11 @@ main(){
                 if (timer == 10) {
                     break;
                 }
-                if (q[l].p[shortest_job_index].burst_time == 0) {
-                    cout<<"Process "<<shortest_job_index+1<<" in queue "<<l+1<<" has completed execution.\n";
-                }
+            
             
 
         }
-        cout<<"Broke from queue "<<l+1<<"\n";
-    }
-
-    for(int i=0;i<3;i++){
-            cout<<"\nTime taken for queue "<<i+1<<" to execute: "<<q[i].total_time<<"\n";
-        for(int j=0;j<q[i].length;j++){
-            cout<<"Process "<<j+1<<" of queue "<<i+1<<" took "<<q[i].p[j].total_time<<"\n";
-        }
+        l+1;
     }
 
     int sum_tt=0;
@@ -328,7 +315,7 @@ main(){
         }
     }
 
-    cout<<"\n The average turnaround time is : "<<sum_tt/no_of_processes<<endl;
-    cout<<"\n The average waiting time is : "<<sum_wt/no_of_processes<<endl;
+    cout<<"\n Average Turnaround Time is : "<<sum_tt/no_of_processes<<endl;
+    cout<<"\n Average Waiting Time is : "<<sum_wt/no_of_processes<<endl;
 
 }
